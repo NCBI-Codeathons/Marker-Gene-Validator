@@ -9,7 +9,7 @@ We are going to start with the gene CYTB since we can download from the RefSeq d
 ##### [1] Develop query to pull nucleotide/proteins sequences of desired gene sequence from Entrez. 
 This query can be as limited or as broad as the gene family of interest and its requirements 
 
-`esearch -db gene -query 'cytb[gene name]' | efetch -format uid > cytb_geneids.txt`
+`this works but I think it needs to be more restrictive esearch -db gene -query 'metazoa[orgn] AND cytb[gene name]' | efetch -format uid > cytb_geneids.txt`
 
 generates 9880 geneids linking to sequences of cytb*
 
