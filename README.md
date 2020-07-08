@@ -36,4 +36,5 @@ Start with large dataset and then breakdown into smaller datasets based on crite
 Repeated iterations should make it easier to detect bad sequences or outliers
 
 #### [4] Create BLAST databases (nucleotide and protein)
-	-include organism name
+	-determine parameters to include in BLAST line
+	
