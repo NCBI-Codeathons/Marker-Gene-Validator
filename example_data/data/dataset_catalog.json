@@ -1,0 +1,28 @@
+{
+  "assemblies": [
+    {
+      "files": [
+        {
+          "filePath": "gene.fna",
+          "fileType": "GENOMIC_NUCLEOTIDE_FASTA"
+        },
+        {
+          "filePath": "rna.fna",
+          "fileType": "RNA_NUCLEOTIDE_FASTA"
+        },
+        {
+          "filePath": "protein.faa",
+          "fileType": "PROTEIN_FASTA"
+        },
+        {
+          "filePath": "data_report.yaml",
+          "fileType": "DATA_REPORT"
+        },
+        {
+          "filePath": "data_table.tsv",
+          "fileType": "DATA_TABLE"
+        }
+      ]
+    }
+  ]
+}

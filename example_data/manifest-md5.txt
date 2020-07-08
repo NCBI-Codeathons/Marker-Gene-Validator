@@ -1,0 +1,6 @@
+b6aa35fa76cd98bb942f83f2560a1056  gene.fna
+d08fe6b02fa8b6bdf08f35aa90d9e434  rna.fna
+b41d2c3b5b46bf03f75cb7bfdf89d79d  protein.faa
+d160b12a86fce3f97900895b28abc891  data_report.yaml
+c5a7ce682ec4ef865a3e3f95ea8a8a8b  data_table.tsv
+15e95bc58094c97f5156f6c0f46c6a75  dataset_catalog.json
