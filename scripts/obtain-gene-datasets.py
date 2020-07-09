@@ -1,16 +1,28 @@
 import argparse
 import json
 import subprocess
+from Bio import Entrez
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--gene-id-file', required=True, type=str, dest='gene_id_file',
-                        help='file of gene ids to download datasets for')
     parser.add_argument('--output-file', required=True, type=str, dest='output_file',
                         help='output zipfile name for dataset')
+    parser.add_argument('--email', required=True, type=str, dest='email',
+                        help='email to provide biopython')
+    parser.add_argument('--query', required=True, type=str, dest='query',
+                        help='query to collect genes for')
+    gene_ids_file = "gene_ids.txt"
     args = parser.parse_args()
-    json_data = format_file_data_into_json(args.gene_id_file)
+    populate_gene_ids_file(args.query, args.email, gene_ids_file)
+    json_data = format_file_data_into_json(gene_ids_file)
     obtain_gene_datasets(json_data, args.output_file)
+    
+def populate_gene_ids_file(query, email, gene_ids_file):
+    Entrez.email = email
+    esearch_results = Entrez.read(Entrez.esearch(db="gene", term=query, retmax=10000))["IdList"]
+    with open(gene_ids_file, "w+") as f:
+        for result in esearch_results:
+            f.write(f"{result}\n")
 
 def obtain_gene_datasets(gene_json, output_file):
     # Fix later to not use curl and handle non-200 responses
