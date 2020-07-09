@@ -30,7 +30,7 @@ generates 9880 geneids linking to sequences of cytb*
 	
 *We can extract the full data set*
 
-*We can download the expanded taxonomy information*
+*We can download expanded taxonomy information that includes tax lineages and subtrees*
 
 *Use NCBI datasets and split into taxonomy groupings*
 		
