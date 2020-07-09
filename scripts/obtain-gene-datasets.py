@@ -17,6 +17,7 @@ def main():
     json_data = format_file_data_into_json(gene_ids_file)
     obtain_gene_datasets(json_data, args.output_file)
     
+    
 def populate_gene_ids_file(query, email, gene_ids_file):
     Entrez.email = email
     esearch_results = Entrez.read(Entrez.esearch(db="gene", term=query, retmax=10000))["IdList"]
@@ -25,6 +26,7 @@ def populate_gene_ids_file(query, email, gene_ids_file):
     with open(gene_ids_file, "w+") as f:
         for result in esearch_results:
             f.write(f"{result}\n")
+            
 
 def obtain_gene_datasets(gene_json, output_file):
     # Fix later to not use curl and handle non-200 responses
