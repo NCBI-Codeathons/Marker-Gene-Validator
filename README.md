@@ -23,6 +23,8 @@ generates 9880 geneids linking to sequences of cytb*
 	-Extract protein fasta set and check fasta headers.  (may need script in case something changes in the future)
 	
 		>YP_003667946.1 cytochrome b (mitochondrion) [Carassius gibelio]
+	
+	-Split at this point into different TAXIDs due to limitations of alighments and BLAST (?) 
 		
 	
 ##### [3] Create histogram to assess length variation. Evaluate sequences at high and low ends. Create script to remove
@@ -33,6 +35,9 @@ sequences of certain lengths
 	-what can be programatically removed based on data provided
 	-sort by tax groups to evaluate 'outliers'
 	-Is there a way to evaulate programmatically internal frameshifts. 
+	
+	Ran test using CLUSTALO but since it does not product tabular output this would not work for the above steps.
+	We are not trying BLAST vs. all on a smaller dataset. 
 
 ##### [5] Validate the sequences with a series of BLAST queries
 
