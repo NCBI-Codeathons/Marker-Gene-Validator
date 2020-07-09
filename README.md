@@ -29,7 +29,9 @@ generates 9880 geneids linking to sequences of cytb*
 	-Split at this point into different TAXIDs due to limitations of alighments and BLAST (?) 
 	
 *We can extract the full data set*
+
 *We can download the expanded taxonomy information*
+
 *Use NCBI datasets and split into taxonomy groupings*
 		
 	
@@ -57,6 +59,7 @@ Start with large dataset and then breakdown into smaller datasets based on crite
 Repeated iterations should make it easier to detect bad sequences or outliers
 
 *Determined that breaking down into taxonomic groups earlier is the better option*
+
 *Reviewing smaller tax groups using BLASTall to determine cutoffs*
 
 #### [6] Create BLAST databases (nucleotide and protein)
