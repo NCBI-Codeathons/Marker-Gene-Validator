@@ -19,14 +19,12 @@ generates 9880 geneids linking to sequences of cytb*
 
 	-The datasets provide the nucleotide sequence, protein sequence and associated metadata
 	-From the datasets the information needed for the next steps can be extracted.
-		-after extraction check the metadata table  (good way check query is providing what you are expecting):
+		-after extraction check the metadata table  (check query is providing what you are expecting):
 			-product names
 			-gene names
 	-Extract protein fasta set and check fasta headers.  (may need script in case something changes in the future)
 	
 		>YP_003667946.1 cytochrome b (mitochondrion) [Carassius gibelio]
-	
-	-Split at this point into different TAXIDs due to limitations of alighments and BLAST (?) 
 	
 *We can extract the full data set*
 
@@ -39,19 +37,19 @@ generates 9880 geneids linking to sequences of cytb*
 sequences of certain lengths
 
 *created histogram in Jupyter* 
+*Going to use stats to evaluate*
 
-##### [4] Run CLUSTALW to align the proteins.  From the alignment assess the following:
+##### [4] Run BLASTall to align the proteins.  From the alignment assess the following:
 	
 	-what can be programatically removed based on data provided
 	-sort by tax groups to evaluate 'outliers'
 	-Is there a way to evaulate programmatically internal frameshifts. 
 	
-	Ran test using CLUSTALO but since it does not product tabular output this would not work for the above steps.
+Ran test using CLUSTALO but since it does not product tabular output this will not be useful for the next steps
 
 
-##### [5] Validate the sequences with a series of BLAST queries
+##### [5] Evaluate BLASTall output
 
-	-TaxID
 	-length
 	-identity
 	
@@ -64,40 +62,51 @@ Repeated iterations should make it easier to detect bad sequences or outliers
 
 #### [6] Create BLAST databases (nucleotide and protein)
 
-# Script PathWay
+# Script Pathway
 
-#### Script 1: Pull out gene data  from the database
+#### Script 1: Pull out gene data from the database (Eutils with taxid input)
 
 	input: query
-	output: bdbag, gene list
+	output: bdbag, geneID list
 	Reality check: Print total number of sequences retrieved
 
-#### Script 2a: print out gene value list. Evaluate low number for annotation errors
+#### Script 2a: Print out gene value list. 
+
+	Evaluate the gene values with low numbers for annotation issues or sequences that should be removed.
 
 #### Script 2b: Determine sequences that are too long/short and move to a file
 
 	input: bdbag
 	output: stats
-	action: Remove sequences based on stats
+	
+	Action: Remove sequences from bdbag based on determined stats parameters
 	
 #### Script 3a: Output tax/gene table 
 
-#### Script 3b: Blast Search
+#### Script 3b: Blastall
 
 	input: bdbag, taxid list
 	output: blast table, msa file
 	
+	msa file will be used if closer evaluation of alignments is needed. 
+	
 #### Script 4: Evaluate BLAST table, determine sequences to be removed
 
 	input: BLAST table, parameters for filtering
-	output: Seqids
+	output: Seqids that would be removed
 	
-#### Script 5: Filter bdbag fasta file to remove Seq_ids from step 4
+	Review removed SeqIDs file to determine if the sequences are truly bad or the 
+	taxid groupings are too broad and smaller taxid groups should be removed. 
+	
+#### Script 5: Filter bdbag fasta file to remove SeqIds from Script 4
 
 	input: bdbag
 	output: edited bdbag
 	
 	Results: Final bdbag for BLAST database
+	
+Notes:
+-Use SeqKit to add remove sequences when we do not want to rebuild from the beginning
 	
 
 	
