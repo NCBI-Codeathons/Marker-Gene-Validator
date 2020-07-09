@@ -63,5 +63,42 @@ Repeated iterations should make it easier to detect bad sequences or outliers
 *Reviewing smaller tax groups using BLASTall to determine cutoffs*
 
 #### [6] Create BLAST databases (nucleotide and protein)
+
+*Script PathWay
+
+Script 1: Pull out gene data  from the database
+
+	input: query
+	output: bdbag, gene list
+	Reality check: Print total number of sequences retrieved
+
+Script 2a: print out gene value list. Evaluate low number for annotation errors
+
+Script 2b: Determine sequences that are too long/short and move to a file
+
+	input: bdbag
+	output: stats
+	action: Remove sequences based on stats
+	
+Script 3a: Output tax/gene table 
+
+Script 3b: Blast Search
+
+	input: bdbag, taxid list
+	output: blast table, msa file
+	
+Script 4: Evaluate BLAST table, determine sequences to be removed
+
+	input: BLAST table, parameters for filtering
+	output: Seqids
+	
+Script 5: Filter bdbag fasta file to remove Seq_ids from step 4
+
+	input: bdbag
+	output: edited bdbag
+	
+	Results: Final bdbag for BLAST database
+	
+
 	
 	
