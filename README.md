@@ -13,6 +13,8 @@ This query can be as limited or as broad as the gene family of interest and its 
 
 generates 9880 geneids linking to sequences of cytb*
 
+*We have refined the query*
+
 ##### [2] Use NCBI Datasets to download metadata and sequence data for gene IDs from step 1
 
 	-The datasets provide the nucleotide sequence, protein sequence and associated metadata
@@ -25,10 +27,16 @@ generates 9880 geneids linking to sequences of cytb*
 		>YP_003667946.1 cytochrome b (mitochondrion) [Carassius gibelio]
 	
 	-Split at this point into different TAXIDs due to limitations of alighments and BLAST (?) 
+	
+*We can extract the full data set*
+*We can download the expanded taxonomy information*
+*Use NCBI datasets and split into taxonomy groupings*
 		
 	
 ##### [3] Create histogram to assess length variation. Evaluate sequences at high and low ends. Create script to remove
 sequences of certain lengths
+
+*created histogram in Jupyter* 
 
 ##### [4] Run CLUSTALW to align the proteins.  From the alignment assess the following:
 	
@@ -37,7 +45,7 @@ sequences of certain lengths
 	-Is there a way to evaulate programmatically internal frameshifts. 
 	
 	Ran test using CLUSTALO but since it does not product tabular output this would not work for the above steps.
-	We are not trying BLAST vs. all on a smaller dataset. 
+
 
 ##### [5] Validate the sequences with a series of BLAST queries
 
@@ -47,6 +55,9 @@ sequences of certain lengths
 	
 Start with large dataset and then breakdown into smaller datasets based on criteria set for BLAST queries.
 Repeated iterations should make it easier to detect bad sequences or outliers
+
+*Determined that breaking down into taxonomic groups earlier is the better option*
+*Reviewing smaller tax groups using BLASTall to determine cutoffs*
 
 #### [6] Create BLAST databases (nucleotide and protein)
 	
