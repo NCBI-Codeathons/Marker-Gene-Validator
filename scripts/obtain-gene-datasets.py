@@ -20,6 +20,8 @@ def main():
 def populate_gene_ids_file(query, email, gene_ids_file):
     Entrez.email = email
     esearch_results = Entrez.read(Entrez.esearch(db="gene", term=query, retmax=10000))["IdList"]
+    if len(esearch_results ) == 0:
+        raise Exception("The provided search query gave yielded no results in esearch")
     with open(gene_ids_file, "w+") as f:
         for result in esearch_results:
             f.write(f"{result}\n")
