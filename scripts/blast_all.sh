@@ -37,5 +37,11 @@ for txid in ${txid_list} ; do
     makeblastdb -in ${txid}_input.fa -parse_seqids -dbtype prot -out ${txid}_blastdb ;
 
     echo -e "$(date) Running all-vs-all blast..." ;
-    blastp -db ${txid}_blastdb -num_threads ${threads} -query ${txid}_input.fa -outfmt 7 -out ${txid}_output.tsv ;
+    blastp -db ${txid}_blastdb -parse_deflines -num_threads ${threads} -query ${txid}_input.fa -outfmt 11 -out ${txid}_archive.asn ;
+
+    echo -e "$(date) Generating blast tabular output..."
+    blast_formatter -archive ${txid}_archive.asn -outfmt '7 std qcovs' -out ${txid}_output.tsv 
+
+    echo -e "$(date) Generating blast seq-align asn..."
+    blast_formatter -archive ${txid}_archive.asn -outfmt 8 -out ${txid}_output.asn
 done
