@@ -1,10 +1,12 @@
 # Build a marker gene reference set
 
-#### Problem: Efficiently create curated databases of genes for GenBank Foosh pipelines. 
+## Problem description and objective 
 
-Creating the curated databases involves several manual steps.  The process starts with complicated Entrez queries.  The nucleotide/protein sequences are then manually evaluated using alignments and BLAST. Due to taxonomoic breadth this process is repeated several times to try and catch outliers and bad data. 
+GenBank uses Foosh pipelines to process new submissions of marker genes. An important component of these pipelines is a high quality database of reference gene sequences. Creating such a curated databases involves several manual steps.  The process starts with complicated Entrez queries.  The nucleotide/protein sequences are then manually evaluated using alignments and BLAST. Due to taxonomoic breadth this process is repeated several times to try and catch outliers and bad data. 
 
-We are going to start with the gene CYTB since we can download from the RefSeq database (keeps the initial starting sequences small), the gene does not have introns, and is similar to COX1 for which GenBank already has a foosh pipeline. 
+The goal of this project is to automate as many of these tasks as possible yet keep the process flexible enough for a curator to jump in at any step and review data. 
+
+As a proof-of-concept, we will produce a Jupyter notebook that a curator can use to build a reference database for the gene CYTB that can be plugged into the GenBank Foosh pipeline. We chose CYTB for this because we can restrict the gene sequences to RefSeq database to keep the initial set relatively small, the gene does not have introns, and is similar to COX1 for which GenBank already has a foosh pipeline. 
 
 ##### [1] Develop query to pull nucleotide/proteins sequences of desired gene sequence from Entrez. 
 This query can be as limited or as broad as the gene family of interest and its requirements 
@@ -62,24 +64,32 @@ Repeated iterations should make it easier to detect bad sequences or outliers
 
 #### [6] Create BLAST databases (nucleotide and protein)
 
-# Script Pathway
+## Workflow
 
-#### Script 1: Pull out gene data from the database (Eutils with taxid input)
+The entire workflow can be executed from a Jupyter notebook with the ability to review and tweak parameters at almost each step. At the same time, the modular nature of the components allows one to wrap the entire workflow into a single script that can be executed without user intervention. 
 
-	input: query
-	output: bdbag, geneID list
-	Reality check: Print total number of sequences retrieved
+Individual steps of the workflow are described below:
 
-#### Script 2a: Print out gene value list. 
+### 1. Fetch gene data 
+```
+input: query
+output: bdbag archive, gene list
+```
+In this step, user provides an Entrez query to be used with the NCBI Gene database that will be used to obtain a list of all NCBI GeneIDs and a data archive containing sequence and metadata. 
 
-	Evaluate the gene values with low numbers for annotation issues or sequences that should be removed.
+### 2. Evaluate names
+```
+input: bdbag archive
+output: gene names list
+```
+The bdbag archive returned by NCBI Datasets contains a data table that will be parsed to obtain a unique list of all gene symbols from the data. A tabular output showing the gene name and the number of sequences with that name allows the curator to quickly check for outliers in gene names. 
 
-#### Script 2b: Determine sequences that are too long/short and move to a file
-
-	input: bdbag
-	output: stats
-	
-	Action: Remove sequences from bdbag based on determined stats parameters
+### 3. Evaluate sequence lengths
+```
+input: bdbag archive
+output: summary statistics table
+```
+Sequence length information is extracted from the data table and a set of summary statistics are presented to the curator. Curator can then set parameters that will filter out any outliers. 
 	
 #### Script 3a: Output tax/gene table 
 
