@@ -8,62 +8,6 @@ The goal of this project is to automate as many of these tasks as possible yet k
 
 As a proof-of-concept, we will produce a Jupyter notebook that a curator can use to build a reference database for the gene CYTB that can be plugged into the GenBank Foosh pipeline. We chose CYTB for this because we can restrict the gene sequences to RefSeq database to keep the initial set relatively small, the gene does not have introns, and is similar to COX1 for which GenBank already has a foosh pipeline. 
 
-##### [1] Develop query to pull nucleotide/proteins sequences of desired gene sequence from Entrez. 
-This query can be as limited or as broad as the gene family of interest and its requirements 
-
-`this works but I think it needs to be more restrictive esearch -db gene -query 'metazoa[orgn] AND cytb[gene name]' | efetch -format uid > cytb_geneids.txt`
-
-generates 9880 geneids linking to sequences of cytb*
-
-*We have refined the query*
-
-##### [2] Use NCBI Datasets to download metadata and sequence data for gene IDs from step 1
-
-	-The datasets provide the nucleotide sequence, protein sequence and associated metadata
-	-From the datasets the information needed for the next steps can be extracted.
-		-after extraction check the metadata table  (check query is providing what you are expecting):
-			-product names
-			-gene names
-	-Extract protein fasta set and check fasta headers.  (may need script in case something changes in the future)
-	
-		>YP_003667946.1 cytochrome b (mitochondrion) [Carassius gibelio]
-	
-*We can extract the full data set*
-
-*We can download expanded taxonomy information that includes tax lineages and subtrees*
-
-*Use NCBI datasets and split into taxonomy groupings*
-		
-	
-##### [3] Create histogram to assess length variation. Evaluate sequences at high and low ends. Create script to remove
-sequences of certain lengths
-
-*created histogram in Jupyter* 
-*Going to use stats to evaluate*
-
-##### [4] Run BLASTall to align the proteins.  From the alignment assess the following:
-	
-	-what can be programatically removed based on data provided
-	-sort by tax groups to evaluate 'outliers'
-	-Is there a way to evaulate programmatically internal frameshifts. 
-	
-Ran test using CLUSTALO but since it does not product tabular output this will not be useful for the next steps
-
-
-##### [5] Evaluate BLASTall output
-
-	-length
-	-identity
-	
-Start with large dataset and then breakdown into smaller datasets based on criteria set for BLAST queries.
-Repeated iterations should make it easier to detect bad sequences or outliers
-
-*Determined that breaking down into taxonomic groups earlier is the better option*
-
-*Reviewing smaller tax groups using BLASTall to determine cutoffs*
-
-#### [6] Create BLAST databases (nucleotide and protein)
-
 ## Workflow
 
 The entire workflow can be executed from a Jupyter notebook with the ability to review and tweak parameters at almost each step. At the same time, the modular nature of the components allows one to wrap the entire workflow into a single script that can be executed without user intervention. 
@@ -91,33 +35,33 @@ output: summary statistics table
 ```
 Sequence length information is extracted from the data table and a set of summary statistics are presented to the curator. Curator can then set parameters that will filter out any outliers. 
 	
-#### Script 3a: Output tax/gene table 
+### 4. Bin sequences in to groups
+```
+input: bdbag archive, tax group identifiers
+output: table with accessions
+```
+To keep the number of sequences used in the subsequent steps that involve all-vs-all BLAST analyses, sequences are grouped into broad taxonomic groups at the curator's discretion. This step accepts a list of NCBI taxonomy identifiers for various tax groups, parses the data table in the bdbag archive to extract all sequences that are part of a given taxonomic group. 
 
-#### Script 3b: Blastall
-
-	input: bdbag, taxid list
-	output: blast table, msa file
+### 5. BLAST all 
+```
+input: bdbag archive, table with accessions
+output: blast tabular output and blast alignments
+```	
+Using the list of sequence accessions produced by the previous step, a BLAST database will be built and all-vs-all BLAST is performed. A table with the BLAST results as well as alignments in ASN format will be returned. The BLAST table is used for assessing which set of parameters are to be used for the subsequent step of filtering sequences that will be kept for the reference BLAST database. The ASN file with all alignments can be loaded in to Gbech for visual inspection of all alignments. 
 	
-	msa file will be used if closer evaluation of alignments is needed. 
+### 6. Filter BLAST results
+```
+input: BLAST table, parameters for filtering
+output: list of accessions to keep 
+```
+Based on a set of parameters chosen by the curator after reviewing data from the previous step, a list of accessions is generated that will be used for building a reference gene blast database. 
 	
-#### Script 4: Evaluate BLAST table, determine sequences to be removed
-
-	input: BLAST table, parameters for filtering
-	output: Seqids that would be removed
-	
-	Review removed SeqIDs file to determine if the sequences are truly bad or the 
-	taxid groupings are too broad and smaller taxid groups should be removed. 
-	
-#### Script 5: Filter bdbag fasta file to remove SeqIds from Script 4
-
-	input: bdbag
-	output: edited bdbag
-	
-	Results: Final bdbag for BLAST database
-	
-Notes:
--Use SeqKit to add remove sequences when we do not want to rebuild from the beginning
-	
+### 7. Build a reference BLAST database
+```
+	input: bdbag archive, accession list
+	output: blast database
+```
+In this final step, a blast database containing a reference set of sequences for a given gene is generated. A list of accessions generated by the previous step is used to determine which sequences are to be included in the database. 	
 
 	
 	
