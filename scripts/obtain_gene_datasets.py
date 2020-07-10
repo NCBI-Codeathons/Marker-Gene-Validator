@@ -57,7 +57,7 @@ def obtain_gene_datasets(gene_json, output_file):
     # Fix later to not use curl and handle non-200 responses
     return_code = subprocess.check_call(f'curl -X POST "https://api.ncbi.nlm.nih.gov/datasets/v1alpha/download/gene?filename=ncbi_dataset.zip" -H "accept: application/zip" -H "Content-Type: application/json" --data \'{gene_json}\' > {output_file}', shell=True)
     if return_code != 0:
-        log_and_raise_exception("The provided search query gave yielded no results in esearch")
+        log_and_raise_exception("Command to obtain datasets failed")
 
 def format_file_data_into_json(data_file):
     """input: data_file (sequence ids separated by \n)
