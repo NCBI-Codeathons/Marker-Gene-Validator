@@ -1,3 +1,6 @@
 pandas
 numpy
 matplotlib
+biopython
+ncbi-datasets-pylib
+
