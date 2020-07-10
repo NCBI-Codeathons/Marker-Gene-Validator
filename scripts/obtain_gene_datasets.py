@@ -9,6 +9,7 @@ gene_ids_file = "gene_ids.txt"
 logging.basicConfig(filename='process_markers.log', level=logging.DEBUG)
 logger = logging.getLogger(f"{__file__}:{__name__}")
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output-file', required=True, type=str, dest='output_file',
@@ -21,6 +22,7 @@ def main():
     populate_gene_ids_file(args.query, args.email, gene_ids_file)
     json_data = format_file_data_into_json(gene_ids_file)
     obtain_gene_datasets(json_data, args.output_file)
+
     
 def log_and_raise_exception(error_message):
     """input: error_message (error message string)
@@ -28,6 +30,7 @@ def log_and_raise_exception(error_message):
     """ 
     logger.error(error_message)
     raise Exception(error_message)
+
     
 def populate_gene_ids_file(query, email, gene_ids_file):
     """input: query (query to give esearch), email (email to provide biopython),
@@ -58,6 +61,7 @@ def obtain_gene_datasets(gene_json, output_file):
     return_code = subprocess.check_call(f'curl -X POST "https://api.ncbi.nlm.nih.gov/datasets/v1alpha/download/gene?filename=ncbi_dataset.zip" -H "accept: application/zip" -H "Content-Type: application/json" --data \'{gene_json}\' > {output_file}', shell=True)
     if return_code != 0:
         log_and_raise_exception("Command to obtain datasets failed")
+
 
 def format_file_data_into_json(data_file):
     """input: data_file (sequence ids separated by \n)
