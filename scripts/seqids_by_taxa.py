@@ -59,6 +59,8 @@ def main():
     # write out the seqids with their corresponding tax group
     with open(args.output, "w") as f:
         for taxgroup,taxids in tax_to_seqid.items():
+            # Send counts by group to stdout
+            print(f'{taxgroup}\t{len(taxids)}')
             for taxid in taxids:
                 f.write(f'{taxgroup}\t{taxid}\n')
 
