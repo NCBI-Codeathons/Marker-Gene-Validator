@@ -26,7 +26,7 @@ if [ ! -f "${prot_fasta}" ]; then
 fi
 
 echo -e "$(date) Filtering protein fasta..." ;
-seqkit grep -f ${acclist} ${prot_fasta} > ${filepref}.fasta 
+seqkit grep -v -f ${acclist} ${prot_fasta} > ${filepref}.fasta 
 
 echo -e "$(date) Create a BLAST database..." 
 makeblastdb -in ${filepref}.fasta -parse_seqids -dbtype prot -out ${filepref}_blastdb 
