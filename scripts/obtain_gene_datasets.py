@@ -3,6 +3,8 @@ import json
 import subprocess
 from Bio import Entrez
 
+gene_ids_file = "gene_ids.txt"
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output-file', required=True, type=str, dest='output_file',
@@ -11,7 +13,6 @@ def main():
                         help='email to provide biopython')
     parser.add_argument('--query', required=True, type=str, dest='query',
                         help='query to collect genes for')
-    gene_ids_file = "gene_ids.txt"
     args = parser.parse_args()
     populate_gene_ids_file(args.query, args.email, gene_ids_file)
     json_data = format_file_data_into_json(gene_ids_file)
@@ -19,16 +20,27 @@ def main():
     
     
 def populate_gene_ids_file(query, email, gene_ids_file):
+    """input: query (query to give esearch), email (email to provide biopython),
+              gene_ids_file (where to output gene ids)
+       Calls esearch to obtain ids for gene search and writes the ids to gene_ids_file
+    """
     Entrez.email = email
-    esearch_results = Entrez.read(Entrez.esearch(db="gene", term=query, retmax=10000))["IdList"]
-    if len(esearch_results ) == 0:
+    esearch_record = Entrez.read(Entrez.esearch(db="gene", term=query))
+    total_record_number = int(esearch_record["Count"])
+    ids = esearch_record["IdList"]
+    if total_record_number > len(ids):
+        ids = Entrez.read(Entrez.esearch(db="gene", term=query, retmax=total_record_number))["IdList"]
+    if len(ids) == 0:
         raise Exception("The provided search query gave yielded no results in esearch")
     with open(gene_ids_file, "w+") as f:
-        for result in esearch_results:
+        for result in ids:
             f.write(f"{result}\n")
             
 
 def obtain_gene_datasets(gene_json, output_file):
+    """input: gene_json (json string request data), output_file (file to write datasets to)
+       Calls datasets api to get gene datasets
+    """
     # Fix later to not use curl and handle non-200 responses
     return_code = subprocess.check_call(f'curl -X POST "https://api.ncbi.nlm.nih.gov/datasets/v1alpha/download/gene?filename=ncbi_dataset.zip" -H "accept: application/zip" -H "Content-Type: application/json" --data \'{gene_json}\' > {output_file}', shell=True)
     if return_code != 0:
@@ -36,6 +48,9 @@ def obtain_gene_datasets(gene_json, output_file):
 
 
 def format_file_data_into_json(data_file):
+    """input: data_file (sequence ids separated by \n)
+       output: json request structure of gene ids to pass to datasets api
+    """
     with open(data_file, "r") as f:
         content = f.read()
     genes = content.strip().split("\n")
