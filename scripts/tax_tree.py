@@ -1,8 +1,10 @@
-from __future__ import print_function
-import time
+import logging
 from Bio import Entrez
 import ncbi.datasets
 from ncbi.datasets.rest import ApiException
+
+logging.basicConfig(filename='process_markers.log', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 '''
@@ -35,7 +37,7 @@ class TaxTree:
                 self._build_node_map(tree)
                 self.root = self.node_map[str(tax_id)]
             except ApiException as e:
-                print("Exception when calling TaxTreeApi->tax_tree_by_tax_id: %s\n" % e)
+                logger.error(f"Exception when calling TaxTreeApi->tax_tree_by_tax_id: e")
 
     def _build_node_map(self, node):
         self.node_map[node['tax_id']] =  { 
@@ -90,7 +92,7 @@ class TaxTree:
                     self.node_map[tax_id]['sci_name'] = rank
             return True
         else:
-            # print(f"No connection found for {[org['TaxId'] for org in tax_lineage]} to existing tree")
+            logger.warning(f"No connection found for {[org['TaxId'] for org in tax_lineage]} to existing tree")
             return False
 
     def add_entrez_taxa(self, taxids, email):
@@ -107,7 +109,6 @@ class TaxTree:
             for t in taxon["LineageEx"]:
                 lineage.insert(0, t)
             lineage.insert(0, {'TaxId': taxid, 'ScientificName': name})
-            # print(f"{taxid}\t|\t{name}\t")
             self.add_tax_node(str(taxid), lineage, name, common_name, rank)
 
     def get_lineage(self, tax_id):
@@ -138,7 +139,7 @@ class TaxTree:
         parent_node = self.get_org_if_exists(parent_tax_id)
         results = []
         if not parent_node:
-            print("parent node not found: ", parent_tax_id)
+            logger.warning(f"parent node not found: {parent_tax_id}")
         else: 
             self._all_children(parent_node, results)
         return results

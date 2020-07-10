@@ -1,11 +1,13 @@
 import argparse
-import json
+import logging
 import os
-import subprocess
 from tax_tree import TaxTree
 from report_reader import DatasetsReportReader
 
-UNASSIGNED_SEQIDS = "-1"
+logging.basicConfig(filename='process_markers.log', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+# UNASSIGNED_SEQIDS = "-1"
 
 
 def main():
@@ -37,23 +39,22 @@ def main():
         tax_to_seqid[group_taxid] = []
         child_ids = taxtree.get_subtree_taxids(group_taxid)
         if not child_ids:
-            print(f"Warning - No taxids found for {group_taxid} subtree")
+            logger.warning(f"No taxids found for {group_taxid} subtree")
             continue
         for child_id in child_ids:
             taxmap[child_id] = group_taxid
 
     # add a taxid group to capture seqids which were not found to belong to any group
-    tax_to_seqid[UNASSIGNED_SEQIDS] = []
+    # tax_to_seqid[UNASSIGNED_SEQIDS] = []
 
     # Go over all transcripts and assign the seqids (based on their taxid) to the group
     # to which they belong, or the UNASSSIGNED group
     for gene in gene_data_report.genes:
         taxgroup = taxmap.get(str(gene.tax_id), "")
         for transcript in gene.transcripts:
-            if not taxgroup:
-                tax_to_seqid[UNASSIGNED_SEQIDS].append(transcript.accession_version)
-            else:
-                tax_to_seqid[taxgroup].append(transcript.accession_version)
+            if taxgroup:
+                if transcript.protein:
+                    tax_to_seqid[taxgroup].append(transcript.protein.accession_version)
 
     # write out the seqids with their corresponding tax group
     with open(args.output, "w") as f:
@@ -66,7 +67,7 @@ def get_data_report(bdbag):
     report_reader = DatasetsReportReader()
     report_file = os.path.join(bdbag, "data/data_report.yaml")
     if not os.path.isfile(report_file):
-        print(f'Error opening report file. File not found: {report_file}')
+        logger.error(f'Error opening report file. File not found: {report_file}')
         return 1
 
     return report_reader.gene_report_from_file(report_file)

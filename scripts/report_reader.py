@@ -2,11 +2,10 @@ import yaml
 import logging
 
 from google.protobuf.json_format import ParseDict, SerializeToJsonError, ParseError
-
 import ncbi.datasets.v1alpha1.reports.gene_pb2 as gene_report_pb2
 
-
-logger = logging.getLogger()
+logging.basicConfig(filename='process_markers.log', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 class DatasetsReportReader():
