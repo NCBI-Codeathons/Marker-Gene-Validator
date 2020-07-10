@@ -1,3 +1,0 @@
-Bag-Software-Agent: bagit.py v0.0.1 <https://www.ncbi.nlm.nih.gov/datasets/>
-Bagging-Date: 2020-07-08
-Payload-Oxum: 2158319.6
