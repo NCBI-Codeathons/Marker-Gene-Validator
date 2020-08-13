@@ -16,7 +16,8 @@ def main():
                         help='output zipfile name for dataset')
     parser.add_argument('--email', required=True, type=str, dest='email',
                         help='email to provide biopython')
-    parser.add_argument('--query', required=True, type=str, dest='query',
+    parser.add_argument('--query', required=False, type=str, dest='query',
+                        default='Hominoidea [ORGN] AND cytb [GENE] AND source mitochondrion [PROP] NOT rnatype mrna [PROP] NOT srcdb pdb [PROP] NOT uncultured NOT unverified',
                         help='query to collect genes for')
     args = parser.parse_args()
     populate_gene_ids_file(args.query, args.email, gene_ids_file)
@@ -70,7 +71,7 @@ def format_file_data_into_json(data_file):
     with open(data_file, "r") as f:
         content = f.read()
     genes = content.strip().split("\n")
-    return json.dumps({'gene_ids': [int(gene) for gene in genes]})
+    return json.dumps({'gene_ids': [int(gene) for gene in genes], 'include_annotation_type': ['FASTA_ALL']})
 
 
 if __name__ == "__main__":
