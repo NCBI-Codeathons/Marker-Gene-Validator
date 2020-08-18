@@ -51,10 +51,9 @@ def main():
     # to which they belong, or the UNASSSIGNED group
     for gene in gene_data_report.genes:
         taxgroup = taxmap.get(str(gene.tax_id), "")
-        for transcript in gene.transcripts:
+        for protein in gene.proteins:
             if taxgroup:
-                if transcript.protein:
-                    tax_to_seqid[taxgroup].append(transcript.protein.accession_version)
+                tax_to_seqid[taxgroup].append(protein.accession_version)
 
     # write out the seqids with their corresponding tax group
     with open(args.output, "w") as f:
