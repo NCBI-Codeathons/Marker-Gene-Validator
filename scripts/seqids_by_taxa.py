@@ -49,6 +49,7 @@ def main():
 
     # Go over all transcripts and assign the seqids (based on their taxid) to the group
     # to which they belong, or the UNASSSIGNED group
+    count = 0
     for gene in gene_data_report.genes:
         taxgroup = taxmap.get(str(gene.tax_id), "")
         for protein in gene.proteins:
@@ -80,7 +81,8 @@ def add_missing_taxids(taxtree, gene_data_report, email):
         if not taxtree.get_org_if_exists(str(gene.tax_id)):
             missing_taxa.add(str(gene.tax_id))
     uids = ",".join(missing_taxa)
-    taxtree.add_entrez_taxa(uids, email)
+    if len(uids):
+        taxtree.add_entrez_taxa(uids, email)
 
 if __name__ == "__main__":
     main()

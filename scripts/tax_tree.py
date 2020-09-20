@@ -8,36 +8,27 @@ logger = logging.getLogger(__name__)
 
 
 '''
-Construct a taxtree using the ncbi datasets TaxTreeApi service.  
+Construct a taxtree using the ncbi datasets GeneApi service.  
 Tree is constructed using a root tax id and tax info can be returned
 based on tax-id.
-Tree also supports separate lineage function and subtree function.
-
-Examples:
-    taxtree = TaxTree(33208)
-    org = taxtree.get_org_if_exists("9606")
-    print("human: ", org)
-    lineage = taxtree.get_lineage("9606")
-    print("human lineage: ", lineage)
-    all_children = taxtree.get_all_children_for("207598")
-    print("children of 207598:", all_children)
 '''
 class TaxTree:
     # defaults to metazoan
-    def __init__(self, tax_id=33208):
+    def __init__(self, tax_id="33208"):
         self.node_map = {}
         self.root = {}
         with ncbi.datasets.ApiClient() as api_client:
-            api_instance = ncbi.datasets.TaxTreeApi(api_client)
+            # api_instance = ncbi.datasets.TaxTreeApi(api_client)
+            api_instance = ncbi.datasets.GeneApi(api_client)
             try:
                 # Retrieve tax tree by taxonomy ID 
-                api_response = api_instance.tax_tree_by_tax_id(tax_id)
+                api_response = api_instance.gene_tax_tree(tax_id)
                 tree = api_response.to_dict()
                 self.node_map = {}
                 self._build_node_map(tree)
                 self.root = self.node_map[str(tax_id)]
             except ApiException as e:
-                logger.error(f"Exception when calling TaxTreeApi->tax_tree_by_tax_id: e")
+                logger.error(f"Exception when calling GeneApi->gene_tax_tree: e")
 
     def _build_node_map(self, node):
         self.node_map[node['tax_id']] =  { 
@@ -51,7 +42,6 @@ class TaxTree:
 
         if node['children']:
             for org in node.get('children', []):
-                self.node_map[node['tax_id']]['children'].append(org['tax_id'])
                 self._build_node_map(org)
 
     def add_tax_node(self, tax_id, tax_lineage, sci_name, common_name, rank):
