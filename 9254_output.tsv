@@ -1,0 +1,25 @@
+# BLASTP 2.11.0+
+# Query: NP_542242.1 CYTB [organism=Tachyglossus aculeatus] [GeneID=804506]
+# Database: 9254_blastdb
+# Fields: query acc.ver, subject acc.ver, % identity, alignment length, mismatches, gap opens, q. start, q. end, s. start, s. end, evalue, bit score, % query coverage per subject
+# 3 hits found
+NP_542242.1	NP_542242.1	100.000	379	0	0	1	379	1	379	0.0	759	100
+NP_542242.1	YP_122155.1	97.361	379	10	0	1	379	1	379	0.0	742	100
+NP_542242.1	NP_008055.1	89.710	379	39	0	1	379	1	379	0.0	674	100
+# BLASTP 2.11.0+
+# Query: NP_008055.1 CYTB [organism=Ornithorhynchus anatinus] [GeneID=808703]
+# Database: 9254_blastdb
+# Fields: query acc.ver, subject acc.ver, % identity, alignment length, mismatches, gap opens, q. start, q. end, s. start, s. end, evalue, bit score, % query coverage per subject
+# 3 hits found
+NP_008055.1	NP_008055.1	100.000	379	0	0	1	379	1	379	0.0	756	100
+NP_008055.1	YP_122155.1	91.293	379	33	0	1	379	1	379	0.0	705	100
+NP_008055.1	NP_542242.1	89.710	379	39	0	1	379	1	379	0.0	699	100
+# BLASTP 2.11.0+
+# Query: YP_122155.1 CYTB [organism=Zaglossus bruijni] [GeneID=3112551]
+# Database: 9254_blastdb
+# Fields: query acc.ver, subject acc.ver, % identity, alignment length, mismatches, gap opens, q. start, q. end, s. start, s. end, evalue, bit score, % query coverage per subject
+# 3 hits found
+YP_122155.1	YP_122155.1	100.000	379	0	0	1	379	1	379	0.0	758	100
+YP_122155.1	NP_542242.1	97.361	379	10	0	1	379	1	379	0.0	742	100
+YP_122155.1	NP_008055.1	91.293	379	33	0	1	379	1	379	0.0	679	100
+# BLAST processed 3 queries
