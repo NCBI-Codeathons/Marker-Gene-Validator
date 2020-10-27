@@ -59,7 +59,7 @@ def obtain_gene_datasets(gene_json, output_file):
        Calls datasets api to get gene datasets
     """
     # Fix later to not use curl and handle non-200 responses
-    return_code = subprocess.check_call(f'curl -X POST "https://api.ncbi.nlm.nih.gov/datasets/v1alpha/download/gene?filename=ncbi_dataset.zip" -H "accept: application/zip" -H "Content-Type: application/json" --data \'{gene_json}\' > {output_file}', shell=True)
+    return_code = subprocess.check_call(f'curl -X POST "https://api.ncbi.nlm.nih.gov/datasets/v1alpha/gene/download?filename=ncbi_dataset.zip" -H "accept: application/zip" -H "Content-Type: application/json" --data \'{gene_json}\' > {output_file}', shell=True)
     if return_code != 0:
         log_and_raise_exception("Command to obtain datasets failed")
 
@@ -71,7 +71,7 @@ def format_file_data_into_json(data_file):
     with open(data_file, "r") as f:
         content = f.read()
     genes = content.strip().split("\n")
-    return json.dumps({'gene_ids': [int(gene) for gene in genes], 'include_annotation_type': ['FASTA_ALL']})
+    return json.dumps({'gene_ids': [int(gene) for gene in genes], 'include_annotation_type':['FASTA_PROTEIN']})
 
 
 if __name__ == "__main__":
