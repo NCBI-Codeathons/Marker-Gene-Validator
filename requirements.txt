@@ -1,14 +1,12 @@
 pandas
+jsonlines
 numpy
 matplotlib
 biopython
 ncbi-datasets-pylib
-
-virtualenv -p python3 jup
-source ./jup/bin/activate.csh
-pip install jupyter
-pip install jupyterlab
-pip install ipywidgets
-pip install ipykernel
-pip install jupyter_contrib_nbextensions
-pip install jupyter_nbextensions_configurator
+jupyter
+jupyterlab
+ipywidgets
+ipykernel
+jupyter_contrib_nbextensions
+jupyter_nbextensions_configurator

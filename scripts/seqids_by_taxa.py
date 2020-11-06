@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import jsonlines
 from tax_tree import TaxTree
 from report_reader import DatasetsReportReader
 
@@ -50,11 +51,11 @@ def main():
     # Go over all transcripts and assign the seqids (based on their taxid) to the group
     # to which they belong, or the UNASSSIGNED group
     count = 0
-    for gene in gene_data_report.genes:
-        taxgroup = taxmap.get(str(gene.tax_id), "")
-        for protein in gene.proteins:
+    for gene in gene_data_report:
+        taxgroup = taxmap.get(str(gene['taxId']), "")
+        for protein in gene['proteins']:
             if taxgroup:
-                tax_to_seqid[taxgroup].append(protein.accession_version)
+                tax_to_seqid[taxgroup].append(protein['accessionVersion'])
 
     # write out the seqids with their corresponding tax group
     with open(args.output, "w") as f:
@@ -67,19 +68,22 @@ def main():
 
 def get_data_report(bdbag):
     report_reader = DatasetsReportReader()
-    report_file = os.path.join(bdbag, "data/data_report.yaml")
+    report_file = os.path.join(bdbag, "data/data_report.jsonl")
     if not os.path.isfile(report_file):
         logger.error(f'Error opening report file. File not found: {report_file}')
         return 1
 
-    return report_reader.gene_report_from_file(report_file)
+    genes = []
+    with jsonlines.open(report_file) as report_reader:
+        genes = [gene for gene in report_reader]
+    return genes
 
 
 def add_missing_taxids(taxtree, gene_data_report, email):
     missing_taxa = set()
-    for gene in gene_data_report.genes:
-        if not taxtree.get_org_if_exists(str(gene.tax_id)):
-            missing_taxa.add(str(gene.tax_id))
+    for gene in gene_data_report:
+        if not taxtree.get_org_if_exists(str(gene['taxId'])):
+            missing_taxa.add(str(gene['taxId']))
     uids = ",".join(missing_taxa)
     if len(uids):
         taxtree.add_entrez_taxa(uids, email)
