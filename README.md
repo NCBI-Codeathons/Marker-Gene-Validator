@@ -51,10 +51,11 @@ Using the list of sequence accessions produced by the previous step, a BLAST dat
 	
 ### 6. Filter BLAST results
 ```
-input: BLAST table, parameters for filtering
-output: list of accessions to keep 
+input: BLAST TSV table, parameters for filtering and fasta file of all starting sequences
+The notebook will run multiple analysis and output the results to the user. The actual pass/fail criteria can be modfied by the user for the specific data set. Additionally test criteria can also be added as needed. The list of accessions passing all tests can be output or used by Biopython to sort the fasta file. 
+output: fasta file of all sequences that pass the filtering steps and a second fasta file of sequences that fail filtering.
 ```
-Based on a set of parameters chosen by the curator after reviewing data from the previous step, a list of accessions is generated that will be used for building a reference gene blast database. 
+
 	
 ### 7. Build a reference BLAST database
 ```
