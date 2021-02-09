@@ -53,7 +53,7 @@ def main():
     count = 0
     for gene in gene_data_report:
         taxgroup = taxmap.get(str(gene['taxId']), "")
-        for protein in gene['proteins']:
+        for protein in gene.get('proteins', []):
             if taxgroup:
                 tax_to_seqid[taxgroup].append(protein['accessionVersion'])
 
