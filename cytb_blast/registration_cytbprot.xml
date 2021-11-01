@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE RegisterDbOrder PUBLIC "-//NCBI//create db/EN" "register-db.xsd">
+<RegisterDbOrder>
+  <version>1.1</version>
+  <reg-order>
+    <db-path>/net/snowman/vol/export2/mcveigh/notebook/Marker-Gene-Validator/cytb_blast/cytbprots</db-path>
+    <display-name>cytbprotein_ref</display-name>
+    <visibility>public</visibility>
+    <molecule-type>protein</molecule-type>
+    <desc> BLAST data base of cytochrome b reference sequences</desc>
+    <keyword>cytb</keyword>
+  </reg-order>
+</RegisterDbOrder>
