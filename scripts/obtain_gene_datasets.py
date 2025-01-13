@@ -72,7 +72,7 @@ def format_file_data_into_json(data_file):
         content = f.read()
     genes = content.strip().split("\n")
     return json.dumps({'gene_ids': [int(gene) for gene in genes], 'include_annotation_type':['FASTA_PROTEIN']})
-
+    #return json.dumps({'gene_ids': { gene_ids: [int(gene) for gene in genes] }, 'include_annotation_type':['FASTA_PROTEIN']})
 
 if __name__ == "__main__":
     main()
